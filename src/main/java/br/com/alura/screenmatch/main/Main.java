@@ -9,10 +9,7 @@ import br.com.alura.screenmatch.service.ConvertData;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -45,8 +42,10 @@ public class Main {
 			seasonList.add(season);
 		}
 
-        List<EpisodeRecord> episodes = seasonList.stream()
-                .flatMap(t -> t.episodes().stream()).toList();
+        // Lista episódios
+//        List<EpisodeRecord> episodes = seasonList.stream()
+//                .flatMap(t -> t.episodes().stream()).toList();
+        // Lista episódios
 
         // Lista melhores episódios
 //        List<EpisodeRecord> bestEpisodes = episodes.stream()
@@ -62,23 +61,63 @@ public class Main {
                         .map(e -> new Episodio(e.number(), e))).toList();
 
         episodios.forEach(System.out::println);
+        // Seleciona todos episódios através de stream
 
+
+//        // Filtra episódios a partir de uma data digitada pelo usuário
+//        System.out.println("A partir de que ano gostaria de ver os episódios? ");
+//        var year = input.nextInt();
+//        input.nextLine();
+//
+//        LocalDate date = LocalDate.of(year, 1, 1);
+//
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//
+//        episodios.stream().filter(e -> e.getReleaseDate() != null && e.getReleaseDate().isAfter(date))
+//                .forEach(e -> System.out.print(
+//                        "\nTemporada: " + e.getSeason() +
+//                        "\nTítulo: " + e.getTitle() +
+//                        "\nNº Episódio: " + e.getEpisodeNumber() +
+//                        "\nData de lançamento: " + e.getReleaseDate().format(dtf) +
+//                        "\nAvaliação: " + e.getRating()
+//                ));
+//
         // Filtra episódios a partir de uma data digitada pelo usuário
-        System.out.println("A partir de que ano gostaria de ver os episódios? ");
-        var year = input.nextInt();
-        input.nextLine();
 
-        LocalDate date = LocalDate.of(year, 1, 1);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Procura episódio por trecho
+//        System.out.println("Digite um trecho de título: ");
+//        var episodeTitle = input.nextLine();
+//
+//        Optional<Episodio> searchedEpisode = episodios.stream()
+//                .filter(e -> e.getTitle().toUpperCase().contains(episodeTitle.toUpperCase()))
+//                .findFirst();
+//
+//        if (searchedEpisode.isPresent()) {
+//            System.out.println("Nome do episódio: " + searchedEpisode.get().getTitle() +
+//                    " - Episódio: " + searchedEpisode.get().getEpisodeNumber());
+//            System.out.println("Temporada: " + searchedEpisode.get().getSeason());
+//        }
+        // Procura episódio por trecho
 
-        episodios.stream().filter(e -> e.getReleaseDate() != null && e.getReleaseDate().isAfter(date))
-                .forEach(e -> System.out.print(
-                        "\nTemporada: " + e.getSeason() +
-                        "\nTítulo: " + e.getTitle() +
-                        "\nNº Episódio: " + e.getEpisodeNumber() +
-                        "\nData de lançamento: " + e.getReleaseDate().format(dtf) +
-                        "\nAvaliação: " + e.getRating()
-                ));
+        // Exibe média por temporada
+//        Map<Integer, Double> ratingBySeason = episodios.stream()
+//                .filter(e -> e.getRating() > 0.0)
+//                .collect(Collectors.groupingBy(Episodio::getSeason, Collectors.averagingDouble(Episodio::getRating)));
+//
+//        System.out.println(ratingBySeason);
+        // Exibe média por temporada
+
+        // Exibe estatísticas gerais dos episódios
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getRating() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getRating));
+
+        System.out.println("Média avaliação episódios: " + est.getAverage());
+        System.out.println("Avaliação melhor episódio: " + est.getMax());
+        System.out.println("Avaliação pior episódio: " + est.getMin());
+        System.out.println("Total de avaliações: " + est.getCount());
+        // Exibe estatísticas gerais dos episódios
+
     }
 }
